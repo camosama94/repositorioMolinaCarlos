@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <style>
+        html, body {
+            padding: 0;
+            height: 100%;
+        }
+
+        .contenido {
+            display: flex;
+            height: 100vh;
+        }
+
+        #sidebar {
+            width: 15%;
+            background-color: #2c2c2c;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        #sidebar a {
+            text-decoration: none;
+            color: wheat;
+        }
+
+        #contenido {
+            width: 85%;
+            padding: 1rem;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+{% endblock %}
+{% block body %}
+    <!--<h1>Bienvenido usuario Admin: {{ app.user.userIdentifier }}</h1>-->
+
+    <div class="contenido">
+        <div id="sidebar">
+            <a href="#competiciones" id="btn-competiciones" data-url="{{ path('tabla_competiciones') }}" >Competiciones</a>
+            <a href="#datos" id="btn-datos" data-url="{{ path('form_datos') }}" >Mis datos</a>
+            <a href="#about" id="btn-about" data-url="{{ path('about') }}" >Sobre Mí</a>
+        </div>
+
+
+
+        <div id="contenido">
+            <p>Haz clic en una opción del menú</p>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            function cargarContenidoDesdeHash() {
+                const hash = window.location.hash.substring(1); // elimina el '#'
+                if (hash === 'competiciones') {
+                    $('#btn-competiciones').trigger('click');
+                } else if (hash === 'datos') {
+                    $('#btn-datos').trigger('click');
+                } else if (hash === 'about') {
+                    $('#btn-about').trigger('click');
+                }
+
+            }
+
+            // Lógica de clics normales en el sidebar
+            $('#sidebar a').on('click', function (e) {
+                e.preventDefault();
+                const url = $(this).data('url');
+                window.location.hash = this.hash;
+                $('#contenido').load(url, function () {
+                    $('#tabla').DataTable();
+                });
+            });
+
+            // Al entrar en la página, mira si hay un hash
+            cargarContenidoDesdeHash();
+        });
+
+    </script>
+
+{% endblock %}

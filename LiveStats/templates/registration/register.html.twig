@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registro{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4 auth-container p-4">
+            <div class="py-3">
+                <h1 class="h3 mb-4 text-center" style="color: var(--primary)">LiveStats</h1>
+                <h2 class="h4 mb-4 font-weight-normal text-center">Crear nueva cuenta</h2>
+
+                {{ form_start(registrationForm, {
+                    attr: {
+                        class: 'needs-validation',
+                        novalidate: 'novalidate'
+                    }
+                }) }}
+
+                <div class="mb-3">
+                    {{ form_label(registrationForm.username) }}
+                    {{ form_widget(registrationForm.username, { attr: { class: 'form-control', required: true } }) }}
+                    {{ form_errors(registrationForm.username) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(registrationForm.email) }}
+                    {{ form_widget(registrationForm.email, { attr: { class: 'form-control', required: true } }) }}
+                    {{ form_errors(registrationForm.email) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(registrationForm.plainPassword) }}
+                    {{ form_widget(registrationForm.plainPassword, { attr: { class: 'form-control', required: true } }) }}
+                    {{ form_errors(registrationForm.plainPassword) }}
+                </div>
+
+                <div class="d-grid gap-2 mb-3">
+                    <button type="submit" class="btn btn-custom btn-lg">
+                        Registrarse
+                    </button>
+                </div>
+
+                {{ form_end(registrationForm) }}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Validación del formulario del lado del cliente (Bootstrap)
+        (function () {
+            'use strict'
+
+            const forms = document.querySelectorAll('.needs-validation')
+
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+{% endblock %}

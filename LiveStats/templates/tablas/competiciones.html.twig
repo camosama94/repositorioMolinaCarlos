@@ -1,0 +1,81 @@
+<table id="tabla" class="display">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Administrador</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for competicion in competiciones %}
+        <tr>
+            <td>{{ competicion.nombre }}</td>
+            <td>{{ competicion.admin.username }}</td>
+            <td>
+                <button type="button" class="btn btn-primary btn-editar-competicion" data-id="{{ competicion.id }}">
+                    <i class="bi bi-pencil-square"></i>
+                    Editar
+                </button>
+                <button type="button" class="btn btn-danger btn-borrar-competicion" data-id="{{ competicion.id }}">
+                    <i class="bi bi-x-square"></i>
+                    Borrar
+                </button>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearCompeticion">
+    Crear Competición
+</button>
+
+<script>
+    $(document).off('click', '.btn-editar-competicion');
+    $(document).on('click', '.btn-editar-competicion', function () {
+        const id = $(this).data('id');
+
+        $.ajax({
+            url: `/admin/competicion/${id}`,
+            method: 'GET',
+            success: function (data) {
+                console.log(data.id);
+
+                // Asegurarse que se llenan bien los campos ANTES de mostrar el modal
+                $('#competicion-id').val(data.id);
+                $('#nombre-competicion').val(data.nombre);
+
+
+                // Mostrar el modal después de rellenar
+                $('#modalEditarCompeticion').modal('show');
+            },
+            error: function (xhr) {
+                console.error("Error al cargar datos:", xhr.responseText);
+            }
+        });
+    });
+
+    $(document).off('click', '.btn-borrar-competicion');
+    $(document).on('click', '.btn-borrar-competicion', function () {
+        const id = $(this).data('id');
+
+        if (confirm("¿Estás seguro de que quieres borrar esta competición?")) {
+            $.ajax({
+                url: `/admin/competicion/${id}`,
+                method: 'DELETE',
+                success: function (data) {
+                    $('#btn-competiciones').trigger('click');
+                    const alerta = $('#alerta-modal-editar');
+                    alerta.removeClass('d-none');
+                    setTimeout(() => alerta.addClass('d-none'), 3000);
+                },
+                error: function (xhr) {
+                    console.error("Error al borrar competición:", xhr.responseText);
+                }
+            });
+        }
+    });
+
+</script>
+{% include 'forms/competicionNueva.html.twig' %}
+{% include 'forms/competicionEdit.html.twig' %}
